@@ -5,7 +5,8 @@ description: Estimate query cost from EXPLAIN output — highlights expensive op
 Run EXPLAIN on this SQL and produce a cost summary for a data engineer:
 
 ```bash
-varlock run --path ~/.config/secrets/teradata/ -- bash scripts/explain_sql.sh \
+SKILL_DIR=$(find ~/.pi/agent/git -path "*/pi-teradata/skills/teradata-explain-stats" -type d 2>/dev/null | head -1)
+varlock run --path ~/.config/secrets/teradata/ -- bash "$SKILL_DIR/scripts/explain_sql.sh" \
   --sql "{{args}}" \
   --output-dir /tmp \
   --collect-only

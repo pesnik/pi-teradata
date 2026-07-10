@@ -5,8 +5,9 @@ description: Fetch and analyze live Teradata sessions from Viewpoint
 Use the teradata-viewpoint skill to fetch active sessions and produce a summary:
 
 ```bash
-varlock run --path ~/.config/secrets/teradata/ -- python scripts/fetch_sessions.py --output /tmp/td_sessions.json
-python scripts/analyze_sessions.py /tmp/td_sessions.json --mode all
+SKILL_DIR=$(find ~/.pi/agent/git -path "*/pi-teradata/skills/teradata-viewpoint" -type d 2>/dev/null | head -1)
+varlock run --path ~/.config/secrets/teradata/ -- python "$SKILL_DIR/scripts/fetch_sessions.py" --output /tmp/td_sessions.json
+python "$SKILL_DIR/scripts/analyze_sessions.py" /tmp/td_sessions.json --mode all
 ```
 
 Filter options: {{args}}
