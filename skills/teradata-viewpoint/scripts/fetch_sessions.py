@@ -85,6 +85,8 @@ def fetch_sessions(username=None, password=None, state="ACTIVE", show_sql=True):
     try:
         with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
             raw = resp.read().decode("utf-8")
+            if not raw.strip():
+                return []
             data = json.loads(raw)
             # Navigate to sessions list
             sessions = data.get("content", data) if isinstance(data, dict) else data

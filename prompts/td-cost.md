@@ -1,24 +1,11 @@
 ---
-description: Estimate query cost from EXPLAIN output — highlights expensive operations
+description: Estimate query cost from EXPLAIN output
 ---
 
-Run EXPLAIN on this SQL and produce a cost summary for a data engineer:
+Run this exact command — do not explore files or read scripts first:
 
 ```bash
-SKILL_DIR=$(find ~/.pi/agent/git -path "*/pi-teradata/skills/teradata-explain-stats" -type d 2>/dev/null | head -1)
-varlock run --path ~/.config/secrets/teradata/ -- bash "$SKILL_DIR/scripts/explain_sql.sh" \
-  --sql "{{args}}" \
-  --output-dir /tmp \
-  --collect-only
+varlock run --path ~/.config/secrets/teradata/ -- bash $(find ~/.pi/agent/git -path "*/pi-teradata/skills/teradata-explain-stats/scripts/explain_sql.sh" | head -1) --sql "{{args}}" --output-dir /tmp --collect-only
 ```
 
-Interpret the EXPLAIN plan and report:
-1. **Estimated rows** — total rows scanned/moved
-2. **Join strategy** — merge vs product vs hash; flag product joins as high risk
-3. **Redistribution cost** — how much data moves between AMPs
-4. **Spool estimate** — memory pressure risk
-5. **Statistics confidence** — "high confidence" vs "no confidence" estimates
-6. **COLLECT STATISTICS needed** — exact commands if the optimizer recommends them
-7. **One-line verdict** — cheap / moderate / expensive, with the single biggest cost driver
-
-If the SQL is an INSERT...SELECT, explain the SELECT portion only.
+Summarize: join strategy, redistribution cost, spool risk, statistics confidence, COLLECT STATISTICS needed, and a one-line verdict (cheap/moderate/expensive).

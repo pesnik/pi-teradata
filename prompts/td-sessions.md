@@ -2,24 +2,16 @@
 description: Fetch and analyze live Teradata sessions from Viewpoint
 ---
 
-Use the teradata-viewpoint skill to fetch active sessions and produce a summary:
+Run this exact command — do not explore files or read scripts first:
 
 ```bash
-SKILL_DIR=$(find ~/.pi/agent/git -path "*/pi-teradata/skills/teradata-viewpoint" -type d 2>/dev/null | head -1)
-varlock run --path ~/.config/secrets/teradata/ -- python "$SKILL_DIR/scripts/fetch_sessions.py" --output /tmp/td_sessions.json
-python "$SKILL_DIR/scripts/analyze_sessions.py" /tmp/td_sessions.json --mode all
+varlock run --path ~/.config/secrets/teradata/ -- python3 $(find ~/.pi/agent/git -path "*/pi-teradata/skills/teradata-viewpoint/scripts/fetch_sessions.py" | head -1) --output /tmp/td_sessions.json {{args}}
 ```
 
-Filter options: {{args}}
+Then run:
 
-Examples:
-- `/td-sessions` — all active sessions
-- `/td-sessions --filter-user john.doe` — sessions for a specific user
-- `/td-sessions --blocked-only` — only blocked sessions
+```bash
+python3 $(find ~/.pi/agent/git -path "*/pi-teradata/skills/teradata-viewpoint/scripts/analyze_sessions.py" | head -1) /tmp/td_sessions.json --mode all
+```
 
-After fetching, surface:
-1. Blocked sessions and blocking chains
-2. Top CPU/IO consumers
-3. High-skew queries (>80%)
-4. Long-running queries (default >120s)
-5. Product joins (Cartesian — highest risk)
+Summarize the output: blocked sessions, top CPU/IO, high skew (>80%), long-running (>120s), product joins.
