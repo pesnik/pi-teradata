@@ -1,0 +1,15 @@
+# Agent teams — used by TEAM mode (agent-team extension's dispatch_agent).
+# Each team is a list of agent names, defined as agents/<name>.md.
+
+de-team:
+  - planner
+  - etl-builder
+  - dba-reviewer
+  - qa-profiler
+
+migration-team:
+  - planner
+  - dba-reviewer
+
+quick-query:
+  - qa-profiler

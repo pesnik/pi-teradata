@@ -1,0 +1,19 @@
+{
+  "name": "pi-teradata",
+  "version": "0.1.0",
+  "description": "Teradata governance extensions for pi: read-only guard, DDL approval gate, explain cost gate, schema diff guard, PII guard, query band tagger",
+  "type": "pi-package",
+  "license": "MIT",
+  "keywords": ["pi", "teradata", "mcp", "data-engineering", "sql-guard", "governance"],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:pesnik/pi-teradata.git"
+  },
+  "pi": {
+    "extensions": "extensions"
+  },
+  "dependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "typebox": "^0.32.0"
+  }
+}

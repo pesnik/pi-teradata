@@ -1,0 +1,14 @@
+# Copy into your teradata-mcp-server config directory and run with:
+#   teradata-mcp-server --profile dev
+# Pair with PI_TD_PROFILE=dev when launching Pi so the readonly-guard
+# extension knows writes are permitted here.
+
+dev:
+  tool:
+    - "base_*"
+    - "qlty_*"
+    - "dba_*"
+  prompt:
+    - "sql_*"
+  resource:
+    - "glossary"

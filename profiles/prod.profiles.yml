@@ -1,0 +1,16 @@
+# Copy into your teradata-mcp-server config directory and run with:
+#   teradata-mcp-server --profile prod
+# Launch Pi WITHOUT setting PI_TD_PROFILE (defaults to "prod" / read-only in
+# the readonly-guard extension) — belt-and-suspenders with the server-side
+# tool restriction below.
+
+prod:
+  tool:
+    - "base_query"
+    - "base_readQuery"
+    - "base_getSchema"
+    - "qlty_*"
+  prompt:
+    - "sql_readonly_*"
+  resource:
+    - "glossary"

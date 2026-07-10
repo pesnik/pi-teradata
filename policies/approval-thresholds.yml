@@ -1,0 +1,11 @@
+# Consumed by extensions/explain-cost-gate. Tune per-system.
+
+heavy_row_threshold: 10000000   # rows; above this, cost gate prompts for confirmation
+require_approval_for:
+  - DDL
+  - TRUNCATE
+  - MERGE
+  - DELETE
+  - UPDATE
+auto_approve_below_rows: 1000   # small, targeted writes can skip the interactive prompt
+                                 # (still logged and still QueryBand-tagged)

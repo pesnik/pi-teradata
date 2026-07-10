@@ -1,0 +1,16 @@
+# Consumed by extensions/pii-guard. This is a starting point, not a complete
+# classification — sync from your real data catalog / glossary if you have
+# one (the Teradata MCP server's semantic-layer/glossary resource is a good
+# source of truth to pull this from instead of hand-maintaining it).
+
+columns:
+  - ssn
+  - social_security_number
+  - date_of_birth
+  - dob
+  - credit_card_number
+  - cvv
+  - email
+  - phone_number
+  - drivers_license
+  - passport_number

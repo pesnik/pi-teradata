@@ -1,0 +1,40 @@
+# Sequential pipelines — used by CHAIN mode (agent-chain extension).
+# Each step's output feeds into the next via $INPUT; $ORIGINAL is the user's
+# original request.
+
+etl-change:
+  description: "Plan a Teradata schema/ETL change, implement it, and get it reviewed before apply"
+  steps:
+    - agent: planner
+      prompt: >
+        Produce a concrete change plan for: $ORIGINAL
+        Include: affected tables, proposed DDL/DML, rollback statement,
+        and expected row-count impact. Do not execute anything yet.
+    - agent: etl-builder
+      prompt: >
+        Implement the following plan as idempotent Teradata SQL
+        (CREATE TABLE ... with existence checks, MERGE over blind INSERT
+        where applicable):
+
+        $INPUT
+    - agent: dba-reviewer
+      prompt: >
+        Review this proposed SQL for a Teradata Vantage system. Check for:
+        missing statistics, product joins, skew risk, missing PI/PPI
+        considerations, and whether it's safely re-runnable. Approve or
+        request changes.
+
+        $INPUT
+
+migration-verify:
+  description: "Run a migration plan, then independently verify it landed correctly"
+  steps:
+    - agent: etl-builder
+      prompt: "Apply this approved migration plan: $INPUT"
+    - agent: qa-profiler
+      prompt: >
+        Independently profile the tables affected by this migration
+        (row counts, null rates, key uniqueness) and flag any anomaly
+        versus what the plan expected:
+
+        $INPUT
