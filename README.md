@@ -1,6 +1,6 @@
-# teradata-de-agent
+# pi-teradata
 
-**A Pi package that turns the [Pi Coding Agent](https://github.com/badlogic/pi-mono) into a governed Teradata data-engineering platform.**
+**A Pi package that turns the [Pi Coding Agent](https://github.com/earendil-works/pi-coding-agent) into a governed Teradata data-engineering platform.**
 
 Inspired by [ruizrica/agent-pi](https://github.com/ruizrica/agent-pi)'s
 approach of extending Pi through pure configuration — extensions, agent
@@ -26,13 +26,11 @@ safety-conscious Teradata data engineering on top of the
 ## Install
 
 ```bash
-git clone <this-repo> teradata-de-agent && cd teradata-de-agent && ./install.sh
-```
+# From GitHub (recommended)
+pi install git:github.com/pesnik/pi-teradata
 
-or, if you already have Pi:
-
-```bash
-pi install git:<this-repo>
+# Or clone and install locally
+git clone git@github.com:pesnik/pi-teradata.git && cd pi-teradata && ./install.sh
 ```
 
 Then configure a Teradata MCP server connection (see `install.sh` output for
@@ -50,7 +48,7 @@ agents/                Role definitions (.md), teams.yaml, agent-chain.yaml
 prompts/               /td-explain, /td-profile, /td-migrate slash commands
 skills/                Teradata SQL idioms, performance tuning, BTEQ/TPT
 profiles/              dev / prod tool-exposure profiles for the MCP server
-policies/               approval thresholds, PII column list, (extend as needed)
+policies/              approval thresholds, PII column list, (extend as needed)
 docs/ARCHITECTURE.md   Why it's built this way
 ```
 
@@ -78,9 +76,39 @@ Switch to the full team with `/agents-team` → `de-team` for freeform
 multi-agent work, or use `/chain` → `migration-verify` to apply-then-profile
 a change end to end.
 
+## Profiles (PI_TD_PROFILE)
+
+| Profile | Writes Allowed | Use Case |
+|---------|----------------|----------|
+| `prod` (default) | ❌ Blocked | Production / read-only environments |
+| `dev` | ✅ Allowed + `ddl-approval-gate` | Development sandboxes |
+| `sandbox` | ✅ Allowed + `ddl-approval-gate` | Ephemeral test environments |
+
+Set via environment variable:
+```bash
+export PI_TD_PROFILE=dev    # allows writes (with approval gate)
+export PI_TD_PII_ALLOWED=true  # allows unmasked PII column access (use with caution)
+```
+
+## Skills
+
+| Skill | Focus |
+|-------|-------|
+| `teradata-sql-idioms` | QUALIFY, MERGE, recursive CTEs, EXPLAIN reading, join optimization |
+| `teradata-performance-tuning` | Skew detection, stats collection, PJI/UII, workload management |
+| `bteq-tpt-scripting` | BTEQ control logic, TPT load/export operators, checkpoint/restart |
+
+## Prompts (slash commands)
+
+| Command | Description |
+|---------|-------------|
+| `/td-explain <sql>` | Run EXPLAIN and annotate the plan |
+| `/td-profile <table>` | Profile a table (stats, skew, PI suitability) |
+| `/td-migrate <change>` | Run the full migration chain |
+
 ## Status
 
-This is a scaffold, not a published/tested Pi package — verify extension
+This is a **scaffold**, not a published/tested Pi package — verify extension
 call signatures (`tool_call` mutation semantics, exact MCP tool names from
 your installed `teradata-mcp-server` version) against
 `docs/extensions.md` in your Pi install before relying on it for real writes.
