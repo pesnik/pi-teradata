@@ -37,7 +37,7 @@ Then configure a Teradata MCP server connection (see `install.sh` output for
 a starting config) and set:
 
 ```bash
-export PI_TD_PROFILE=prod   # or "dev"/"sandbox" to allow writes — see docs/ARCHITECTURE.md
+export PI_TD_PROFILE=prod   # or "dev"/"sandbox" to allow writes — see profiles section
 ```
 
 ## Package layout
@@ -63,19 +63,6 @@ docs/ARCHITECTURE.md   Why it's built this way
 | `schema-diff-guard` | Warns when a table's live schema drifted since the agent last inspected it |
 | `pii-guard` | Blocks queries touching classified columns outside an approved profile |
 
-## Agent workflows
-
-```
-/td-migrate <describe the change>
-```
-
-runs the `etl-change` chain: **planner** (read-only plan) → **etl-builder**
-(implements, hits the guards) → **dba-reviewer** (performance/safety review).
-
-Switch to the full team with `/agents-team` → `de-team` for freeform
-multi-agent work, or use `/chain` → `migration-verify` to apply-then-profile
-a change end to end.
-
 ## Profiles (PI_TD_PROFILE)
 
 | Profile | Writes Allowed | Use Case |
@@ -92,11 +79,11 @@ export PI_TD_PII_ALLOWED=true  # allows unmasked PII column access (use with cau
 
 ## Skills
 
-| Skill | Focus |
-|-------|-------|
-| `teradata-sql-idioms` | QUALIFY, MERGE, recursive CTEs, EXPLAIN reading, join optimization |
-| `teradata-performance-tuning` | Skew detection, stats collection, PJI/UII, workload management |
-| `bteq-tpt-scripting` | BTEQ control logic, TPT load/export operators, checkpoint/restart |
+| Skill | Description | Key Topics |
+|-------|-------------|------------|
+| `teradata-sql-idioms` | Idiomatic Teradata SQL patterns | QUALIFY, MERGE, recursive CTEs, EXPLAIN reading, join optimization, PPI |
+| `teradata-performance-tuning` | Performance tuning & diagnostics | Skew detection, stats collection, PJI/UII, workload management, spool analysis |
+| `bteq-tpt-scripting` | BTEQ control logic & TPT operators | BTEQ flow control, TPT load/export, checkpoint/restart, error handling |
 
 ## Prompts (slash commands)
 
@@ -105,6 +92,28 @@ export PI_TD_PII_ALLOWED=true  # allows unmasked PII column access (use with cau
 | `/td-explain <sql>` | Run EXPLAIN and annotate the plan |
 | `/td-profile <table>` | Profile a table (stats, skew, PI suitability) |
 | `/td-migrate <change>` | Run the full migration chain |
+
+## Agent workflows
+
+```
+/td-migrate <describe the change>
+```
+
+runs the `etl-change` chain: **planner** (read-only plan) → **etl-builder**
+(implements, hits the guards) → **dba-reviewer** (performance/safety review).
+
+Switch to the full team with `/agents-team` → `de-team` for freeform
+multi-agent work, or use `/chain` → `migration-verify` to apply-then-profile
+a change end to end.
+
+## Related external skills (not bundled, but referenced)
+
+| Skill | Source | Purpose |
+|-------|--------|---------|
+| `teradata-viewpoint` | ~/Pesnik/skills/anythingllm-teradata-skills/teradata-viewpoint | Live session monitoring via Viewpoint API |
+| `teradata-explain-stats` | ~/Pesnik/skills/anythingllm-teradata-skills/teradata-explain-stats | EXPLAIN + COLLECT STATISTICS recommendations |
+
+These can be loaded separately and chain with the `etl-change` workflow.
 
 ## Status
 
