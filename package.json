@@ -10,7 +10,8 @@
     "url": "git@github.com:pesnik/pi-teradata.git"
   },
   "pi": {
-    "extensions": ["extensions"]
+    "extensions": ["extensions"],
+    "prompts": ["prompts"]
   },
   "dependencies": {
     "@earendil-works/pi-coding-agent": "*",
